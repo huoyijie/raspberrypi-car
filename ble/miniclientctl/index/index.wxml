@@ -1,0 +1,51 @@
+<wxs module="utils">
+module.exports.max = function(n1, n2) {
+  return Math.max(n1, n2)
+}
+module.exports.len = function(arr) {
+  arr = arr || []
+  return arr.length
+}
+</wxs>
+<button bindtap="openBluetoothAdapter" hover-class="tap">扫描</button>
+
+<view class="devices_summary">已发现 {{devices.length}} 个外围设备：</view>
+<scroll-view class="device_list" scroll-y scroll-with-animation>
+  <view wx:for="{{devices}}" wx:key="index"
+   data-device-id="{{item.deviceId}}"
+   data-name="{{item.name || item.localName}}"
+   bindtap="createBLEConnection" 
+   class="device_item"
+   hover-class="device_item_hover">
+    <view style="font-size: 16px; color: #333;">{{item.name}}</view>
+    <view style="font-size: 10px">信号强度: {{item.RSSI}}dBm ({{utils.max(0, item.RSSI + 100)}}%)</view>
+    <view style="font-size: 10px">UUID: {{item.deviceId}}</view>
+    <view style="font-size: 10px">Service数量: {{utils.len(item.advertisServiceUUIDs)}}</view>
+  </view>
+</scroll-view>
+
+<view class="connected_info" wx:if="{{connected}}">
+  <view>
+    <text>已连接到 {{name}}</text>
+    <view class="operation">
+    <button size="mini" bindtap="closeBLEConnection" hover-class="tap">断开连接</button>
+    </view>
+  </view>
+  <view style="margin-top: 120rpx;">
+    <view style="display: flex; flex-direction: row; justify-content: center; margin-bottom: 40rpx;">
+      <button bindtap="forward" hover-class="tap" style="width: 30%;">前进</button>
+      <button bindtap="stop" hover-class="tap" style="width: 24%;">停止</button>
+      <button bindtap="backward" hover-class="tap" style="width: 30%;">后退</button>
+    </view>
+    
+    <view style="display: flex; flex-direction: row; justify-content: center; margin-bottom: 40rpx;">
+      <button bindtap="left" hover-class="tap" style="width: 42%;">左转</button>
+      <button bindtap="right" hover-class="tap" style="width: 42%;">右转</button>
+    </view>
+    
+    <view style="display: flex; flex-direction: row; justify-content: center; margin-bottom: 40rpx;">
+      <button bindtap="anticlockwise" hover-class="tap" style="width: 42%;">逆时针转</button>
+      <button bindtap="clockwise" hover-class="tap" style="width: 42%;">顺时针转</button>
+    </view>
+  </view>
+</view>

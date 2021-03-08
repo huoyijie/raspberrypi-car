@@ -1,3 +1,5 @@
+const http = require('http');
+
 var util = require('util');
 
 var bleno = require('@abandonware/bleno');
@@ -27,6 +29,12 @@ CarCtlCharacteristic.prototype.onWriteRequest = function(data, offset, withoutRe
   this._value = data;
 
   console.log('CarCtlCharacteristic - onWriteRequest: value = ' + this._value.toString('hex'));
+
+  http.get(`http://127.0.0.1:8888/car/ctl/${this._value.readUInt8()}`, resp => {
+    // console.log(resp.statusCode);
+  }).on('error', err => {
+    console.error(err.message);
+  }).end();
 
   if (this._updateValueCallback) {
     console.log('CarCtlCharacteristic - onWriteRequest: notifying');
